@@ -5,7 +5,7 @@ mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
 
-cap = cv2.VideoCapture(-1, cv2.CAP_DSHOW)
+cap = cv2.VideoCapture(0)
 
 with mp_hands.Hands(
     model_complexity=0,
