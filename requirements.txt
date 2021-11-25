@@ -30,3 +30,5 @@ termcolor
 cvzone
 opencv-python
 mediapipe
+streamlit-webrtc
+streamlit
