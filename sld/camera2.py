@@ -9,7 +9,9 @@ detector = HandDetector(detectionCon=0.8, maxHands=2)
 while True:
     success, img = cap.read()
     hands, img = detector.findHands(img) #With Draw
+
     #ROI_number = 0
+
 
 
     if hands:
@@ -21,6 +23,7 @@ while True:
         handType1 = hand1["type"] # Hand Type Left or Right
         ROI = img[y:y+h, x:x + w]
         print(ROI)
+
 
 
     cv2.imshow("Image", img)

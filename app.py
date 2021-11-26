@@ -1,4 +1,5 @@
 # CV2 module
+
 from os import MFD_ALLOW_SEALING
 import cv2
 from sld.handdetector import HandDetector
@@ -8,12 +9,15 @@ import tempfile
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 
+
 # Import component
 from streamlit_webrtc import (
     RTCConfiguration,
     VideoProcessorBase,
     WebRtcMode,
     webrtc_streamer,
+
+
 )
 
 #Set up STUN servers
@@ -26,6 +30,7 @@ class SignPredictor(VideoProcessorBase):
 
     def __init__(self) -> None:
         # Hand detector
+
         self.hand_detector = HandDetector(detectionCon=0.8, maxHands=1)
         
 
@@ -33,10 +38,12 @@ class SignPredictor(VideoProcessorBase):
         model = load_model('models/model_h5.h5')
         return model
 
+
     def find_hands(self, image):
 
         #add the rectangle in your image around the hands 
         hands, image_hand = self.hand_detector.findHands(image)
+
         if hands:
             bbox1 = hands[0]["bbox"] # Bounding box info x,y,w,h
             x, y, w, h = bbox1
@@ -46,6 +53,7 @@ class SignPredictor(VideoProcessorBase):
             print(hand_img)
             #print(model.predict(hand_img))
             #cv2.rectangle
+
         return hands, image_hand
 
     def recv(self, frame: av.VideoFrame) -> av.VideoFrame:

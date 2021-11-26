@@ -126,6 +126,7 @@ def main():
             bbox1 = hand1["bbox"]  # Bounding box info x,y,w,h
             centerPoint1 = hand1['center']  # center of the hand cx,cy
             handType1 = hand1["type"]  # Handtype Left or Right
+
             if len(hands) == 2:
                 # Hand 2
                 hand2 = hands[1]
