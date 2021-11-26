@@ -32,3 +32,8 @@ opencv-python
 mediapipe
 streamlit-webrtc
 streamlit
+PyDrive
+tensorflow
+pyyaml
+av
+

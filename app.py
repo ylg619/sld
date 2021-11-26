@@ -1,9 +1,14 @@
 # CV2 module
+
+from os import MFD_ALLOW_SEALING
 import cv2
-from cvzone.HandTrackingModule import HandDetector
+from sld.handdetector import HandDetector
 import av
 import streamlit as st
 import tempfile
+import tensorflow as tf
+from tensorflow.keras.models import load_model
+
 
 # Import component
 from streamlit_webrtc import (
@@ -11,6 +16,7 @@ from streamlit_webrtc import (
     VideoProcessorBase,
     WebRtcMode,
     webrtc_streamer,
+
 
 )
 
@@ -24,15 +30,30 @@ class SignPredictor(VideoProcessorBase):
 
     def __init__(self) -> None:
         # Hand detector
-        self.hand_detector = HandDetector(detectionCon=0.8, maxHands=2)
+
+        self.hand_detector = HandDetector(detectionCon=0.8, maxHands=1)
+        
+
+    def load_model(self):
+        model = load_model('models/model_h5.h5')
+        return model
+
 
     def find_hands(self, image):
 
         #add the rectangle in your image around the hands 
         hands, image_hand = self.hand_detector.findHands(image)
-        #load your deep learning model
-        #make a prediction
-        # add the prediction on the image
+
+        if hands:
+            bbox1 = hands[0]["bbox"] # Bounding box info x,y,w,h
+            x, y, w, h = bbox1
+            hand_img = image_hand[y-100:y+h-100, x-100:x + w + 100] # image of the hand
+            model = self.load_model()
+            #img_resize = hand_img.resize((256,256))
+            print(hand_img)
+            #print(model.predict(hand_img))
+            #cv2.rectangle
+
         return hands, image_hand
 
     def recv(self, frame: av.VideoFrame) -> av.VideoFrame:
