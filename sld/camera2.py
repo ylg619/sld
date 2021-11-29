@@ -12,8 +12,6 @@ while True:
 
     #ROI_number = 0
 
-
-
     if hands:
         # Hand 1
         hand1 = hands[0]
@@ -22,6 +20,8 @@ while True:
         x, y, w, h = bbox1
         handType1 = hand1["type"] # Hand Type Left or Right
         ROI = img[y:y+h, x:x + w]
+        ROI_number +=1
+        if ROI_number % 10 == 0
         print(ROI)
 
 
