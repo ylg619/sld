@@ -129,33 +129,6 @@ webrtc_ctx = webrtc_streamer(
 
 # Instant letter
 if webrtc_ctx.state.playing:
-    labels_placeholder = st.empty()
-
-    while True:
-        if webrtc_ctx.video_processor:
-            try:
-                result = webrtc_ctx.video_processor.result_queue.get(timeout=1.0)
-
-            except queue.Empty:
-                result = None
-            labels_placeholder.write(result)
-        else:
-            break
-    labels_placeholder_letter = st.empty()
-
-    # Predicted letter
-    while True:
-        if webrtc_ctx.video_processor:
-            try:
-                result_letter = webrtc_ctx.video_processor.result_queue_letter.get(
-                    timeout=1.0)
-
-            except queue.Empty:
-                result_letter = None
-            labels_placeholder_letter.write(result_letter)
-        else:
-            break
-
     labels_placeholder_word = st.empty()
 
     # Predicted word
