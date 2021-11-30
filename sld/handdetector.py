@@ -86,23 +86,6 @@ class HandDetector:
                     myHand["type"] = handType.classification[0].label
                 allHands.append(myHand)
 
-                ## draw
-                # if draw:
-                    # self.mpDraw.draw_landmarks(img, handLms,
-                    #                            self.mpHands.HAND_CONNECTIONS)
-                    # box_img = cv2.rectangle(
-                    #     img, (bbox[0] - 20, bbox[1] - 20),
-                    #     (bbox[0] + bbox[2] + 20, bbox[1] + bbox[3] + 20),
-                    #     (0, 255, 0), 2)
-                    # cv2.putText(img, myHand["type"],
-                    #             (bbox[0] - 30, bbox[1] - 30),
-                    #             cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0), 2)
-
-                    # cv2.rectangle(
-                    #     img, (bbox[0] - 20, bbox[1] - 20),
-                    #     (bbox[0] + bbox[2] + 20, bbox[1] + bbox[3] + 20),
-                    #     (0, 255, 0), 2)
-
         if draw:
             return allHands, img
         else:
