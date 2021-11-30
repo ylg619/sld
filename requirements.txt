@@ -37,3 +37,4 @@ tensorflow
 pyyaml
 av
 queue
+emoji
