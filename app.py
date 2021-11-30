@@ -1,7 +1,7 @@
 # CV2 module
 
 import cv2
-from sld.handdetector import HandDetector
+from handdetector import HandDetector
 import av
 import streamlit as st
 import tensorflow as tf
@@ -123,7 +123,7 @@ class SignPredictor(VideoProcessorBase):
         if hands:
             bbox1 = hands[0]["bbox"]  # Bounding box info x,y,w,h
             x, y, w, h = bbox1
-            
+
             #récup img plus grande que la bbox1 de base
             x_square = int(x - 0.2 * w)
             y_square = int(y - 0.2 * h)
@@ -145,8 +145,8 @@ class SignPredictor(VideoProcessorBase):
                 tf.image.resize_with_pad(hand_img, 256, 256))  # resize image to match model's expected sizing
             img_hand_resize = img_hand_resize.reshape(1, 256, 256, 3)
             img_hand_resize = tf.math.divide(img_hand_resize, 255)
-            
-            #couleur img_main 
+
+            #couleur img_main
             channels = tf.unstack(img_hand_resize, axis=-1)
             img_hand_resize = tf.stack([channels[2], channels[1], channels[0]],
                                        axis=-1)
@@ -154,7 +154,7 @@ class SignPredictor(VideoProcessorBase):
             prediction = self.model.predict(img_hand_resize)
             probabs = round(max(self.model.predict_proba(img_hand_resize)[0]),2)
             pred = np.argmax(prediction)
-            
+
             self.counter +=1
             if self.counter % 1 == 0:
                 cv2.putText(image_hand, f'{dict_letter[pred]}',
@@ -163,7 +163,7 @@ class SignPredictor(VideoProcessorBase):
                 cv2.putText(image_hand, f'{str(probabs)}',
                             (int(x_square + 1.5 * w), int(h_square - 0.5 * h)),
                             cv2.FONT_HERSHEY_PLAIN, 2, dict_colors[pred], 2)
-                
+
                 if probabs > 0.75:
                     self.l.append(dict_letter[pred])
 
