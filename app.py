@@ -1,16 +1,14 @@
 # CV2 module
 
-from tensorflow.python.ops.image_ops_impl import image_gradients
 import cv2
 from sld.handdetector import HandDetector
 import av
 import streamlit as st
-import tempfile
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 import numpy as np
 import queue
-import emoji
+
 # Import component
 from streamlit_webrtc import (
     RTCConfiguration,
@@ -20,7 +18,7 @@ from streamlit_webrtc import (
 )
 
 #add_fronta
-app_formal_name = emoji.emojize("🧙 Sign detection 🐍")
+app_formal_name = "🧙 Sign detection 🐍"
 
 # Start the app in wide-mode
 st.set_page_config(
@@ -57,16 +55,15 @@ info_element.write(info, unsafe_allow_html=True)
 
 
 
-# st.markdown("<br>", unsafe_allow_html=True)
-# """Jumpstart your machine learning code:
-# 1. Specify model in the sidebar *(click on **>** if closed)*
-# 2. Training code will be generated below
-# 3. Download and do magic! :sparkles:
-# ---
-# """
+st.markdown("<br>", unsafe_allow_html=True)
+how_work="""Jumpstart your machine learning code:<br>
+1. Select your device<br>
+2. Click on start<br>
+3. Show your hands and do magic! :sparkles:<br>
 
-
-
+---
+"""
+bottom_element.write(how_work, unsafe_allow_html=True)
 
 
 #dictionary of traduction letters
