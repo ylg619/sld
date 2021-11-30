@@ -23,6 +23,7 @@ from streamlit_webrtc import (
 #dictionary of traduction letters
 dict_letter = {0:'A', 1:'B', 2:'C', 3:'D', 4:'E', 5:'F', 6:'G', 7:'H', 8:'I', 9:'K', 10:'L', 11:'M',
                12:'N', 13:'O', 14:'P', 15:'Q', 16:'R', 17:'S', 18:'T', 19:'U', 20:'V', 21:'W', 22:'X', 23:'Y' }
+colors = np.random.uniform(0, 255, size=(len(dict_letter), 3))
 
 #Set up STUN servers
 RTC_CONFIGURATION = RTCConfiguration(
@@ -31,7 +32,7 @@ RTC_CONFIGURATION = RTCConfiguration(
 
 @st.cache(allow_output_mutation=True)
 def load_mo():
-    model = load_model('models/model_resnet50_V2_82_3.h5')
+    model = load_model('models/model_resnet_50_V2_83_49.h5')
     return model
 
 # Your class where you put the intelligence
@@ -84,7 +85,7 @@ class SignPredictor(VideoProcessorBase):
             #pickle.dump(prediction, 'predicts')
             pred = np.argmax(prediction)
             self.counter +=1
-            if self.counter % 3 == 0:
+            if self.counter % 1 == 0:
                 cv2.putText(image_hand, dict_letter[pred],
                             (bbox1[0] + 50, bbox1[1] - 50),
                             cv2.FONT_HERSHEY_PLAIN, 2, (57, 255, 20), 2)
@@ -98,7 +99,7 @@ class SignPredictor(VideoProcessorBase):
 
                 # WORD CREATION
 
-                if len(self.l)==15:
+                if len(self.l)==30:
                     predicted_letter = max(set(self.l), key=self.l.count)
                     self.result_queue_letter.put(predicted_letter)
                     print(f'the predicted letter is {predicted_letter}')
@@ -127,18 +128,24 @@ webrtc_ctx = webrtc_streamer(
         async_processing=True,
     )
 
-# Instant letter
-if webrtc_ctx.state.playing:
-    labels_placeholder_word = st.empty()
+final_word = ""
 
-    # Predicted word
+# Final word
+if webrtc_ctx.state.playing:
+
+    labels_placeholder = st.empty()
+
     while True:
         if webrtc_ctx.video_processor:
             try:
-                result_word = webrtc_ctx.video_processor.result_queue_word.get(timeout=1.0)
-
+                result = webrtc_ctx.video_processor.result_queue_word.get(timeout=1.0)
+                final_word = ""
+                for value in result:
+                    final_word = final_word + value 
+                labels_placeholder.title(final_word)  
             except queue.Empty:
-                result_word = None
-            labels_placeholder_word.write(result_word)
+                result = final_word
+            
         else:
             break
+
