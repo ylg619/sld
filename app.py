@@ -164,7 +164,7 @@ class SignPredictor(VideoProcessorBase):
                             (int(x_square + 1.5 * w), int(h_square - 0.5 * h)),
                             cv2.FONT_HERSHEY_PLAIN, 2, dict_colors[pred], 2)
                 
-                if probabs > 0.95:
+                if probabs > 0.75:
                     self.l.append(dict_letter[pred])
 
                 # COLORING BOX
