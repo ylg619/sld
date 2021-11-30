@@ -5,7 +5,6 @@ Website: https://www.computervision.zone/
 """
 import cv2
 import mediapipe as mp
-import math
 
 class HandDetector:
     """
@@ -79,30 +78,30 @@ class HandDetector:
                 # myHand["center"] = (cx, cy)
 
                 if flipType:
-                    if handType.classification[0].label == "Right":
+                    if handType.classification[0].label == "Right:":
                         myHand["type"] = "Left"
                     else:
-                        myHand["type"] = "Right"
+                        myHand["type"] = "Right:"
                 else:
                     myHand["type"] = handType.classification[0].label
                 allHands.append(myHand)
 
                 ## draw
-                if draw:
+                # if draw:
                     # self.mpDraw.draw_landmarks(img, handLms,
                     #                            self.mpHands.HAND_CONNECTIONS)
-                    box_img = cv2.rectangle(
-                        img, (bbox[0] - 20, bbox[1] - 20),
-                        (bbox[0] + bbox[2] + 20, bbox[1] + bbox[3] + 20),
-                        (255, 0, 255), 2)
-                    cv2.putText(img, myHand["type"],
-                                (bbox[0] - 30, bbox[1] - 30),
-                                cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 255), 2)
+                    # box_img = cv2.rectangle(
+                    #     img, (bbox[0] - 20, bbox[1] - 20),
+                    #     (bbox[0] + bbox[2] + 20, bbox[1] + bbox[3] + 20),
+                    #     (0, 255, 0), 2)
+                    # cv2.putText(img, myHand["type"],
+                    #             (bbox[0] - 30, bbox[1] - 30),
+                    #             cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0), 2)
 
-                    cv2.rectangle(
-                        img, (bbox[0] - 20, bbox[1] - 20),
-                        (bbox[0] + bbox[2] + 20, bbox[1] + bbox[3] + 20),
-                        (255, 0, 255), 2)
+                    # cv2.rectangle(
+                    #     img, (bbox[0] - 20, bbox[1] - 20),
+                    #     (bbox[0] + bbox[2] + 20, bbox[1] + bbox[3] + 20),
+                    #     (0, 255, 0), 2)
 
         if draw:
             return allHands, img
