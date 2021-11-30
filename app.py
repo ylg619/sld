@@ -132,6 +132,7 @@ final_word = ""
 
 # Final word
 if webrtc_ctx.state.playing:
+
     labels_placeholder = st.empty()
 
     while True:
