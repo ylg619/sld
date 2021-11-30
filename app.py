@@ -10,15 +10,64 @@ import tensorflow as tf
 from tensorflow.keras.models import load_model
 import numpy as np
 import queue
+import emoji
 # Import component
 from streamlit_webrtc import (
     RTCConfiguration,
     VideoProcessorBase,
     WebRtcMode,
     webrtc_streamer,
-
-
 )
+
+#add_fronta
+app_formal_name = emoji.emojize("🧙 Sign detection 🐍")
+
+# Start the app in wide-mode
+st.set_page_config(
+    layout="wide", page_title=app_formal_name,
+)
+
+# Starting random state
+random_state = 78
+
+# Number of results to return
+top_k = 12
+
+# initialise the title
+title_element = st.empty()
+info_element = st.empty()
+bottom_element = st.empty()
+
+#title
+title = f"<h1 style='text-align: center; font-family:verdana;'>Sign Language Detection</h1>"
+#info
+info = '''
+<p>A real-time sign language translator permit communication between the deaf
+community and the general public. 🤙</p>
+<p>We hereby present the development and implementation of an American Sign
+Language fingerspelling translator based on a
+convolutional neural network. 🚀</p>
+<p>Made with 💙 by <a href='https://github.com/jvesp/sld'>Detection language team</a></p>'''.strip()
+"""
+[![Star](https://img.shields.io/github/stars/jvesp/sld.svg?logo=github&style=social)](https://github.com/jvesp/sld)
+"""
+
+title_element.markdown(title, unsafe_allow_html=True)
+info_element.write(info, unsafe_allow_html=True)
+
+
+
+# st.markdown("<br>", unsafe_allow_html=True)
+# """Jumpstart your machine learning code:
+# 1. Specify model in the sidebar *(click on **>** if closed)*
+# 2. Training code will be generated below
+# 3. Download and do magic! :sparkles:
+# ---
+# """
+
+
+
+
 
 #dictionary of traduction letters
 dict_letter = {0:'A', 1:'B', 2:'C', 3:'D', 4:'E', 5:'F', 6:'G', 7:'H', 8:'I', 9:'K', 10:'L', 11:'M',
