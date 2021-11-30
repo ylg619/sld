@@ -108,8 +108,11 @@ class SignPredictor(VideoProcessorBase):
                     self.result_queue_word.put(self.word)
                     print(self.word)
                     self.l=[]
-        #else:
-        #print('espace')
+        else:
+            if self.word:
+                if self.word[-1] != " ":
+                    self.word.append(" ")
+                    self.result_queue_word.put(self.word)
 
         return hands, image_hand
 
