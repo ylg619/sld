@@ -22,6 +22,7 @@ from streamlit_webrtc import (
 app_formal_name = "🧙 Sign detection 🐍"
 
 # Start the app in wide-mode
+
 st.set_page_config(
     layout="wide", page_title=app_formal_name,
 )
@@ -41,6 +42,11 @@ bottom_element = st.empty()
 title = f"<h1 style='text-align: center; font-family:verdana;'>Sign Language Detection</h1>"
 #info
 info = '''
+<style>{
+div[data-testid="stHorizontalBlock"] > div:first-of-type {
+  background-image: url("https://images.pexels.com/photos/7516363/pexels-photo-7516363.jpeg?cs=srgb&dl=pexels-shvets-production-7516363.jpg&fm=jpg")
+}
+}</style>
 <p>A real-time sign language translator permit communication between the deaf
 community and the general public. 🤙</p>
 <p>We hereby present the development and implementation of an American Sign
@@ -54,9 +60,15 @@ convolutional neural network. 🚀</p>
 title_element.markdown(title, unsafe_allow_html=True)
 info_element.write(info, unsafe_allow_html=True)
 
+#backgroud image
+empty_col_bg, col_bg = st.columns([0.5, 1.5])
+
 
 
 st.markdown("<br>", unsafe_allow_html=True)
+
+
+
 how_work="""Jumpstart your machine learning code:<br>
 1. Select your device<br>
 2. Click on start<br>
@@ -64,6 +76,10 @@ how_work="""Jumpstart your machine learning code:<br>
 
 ---
 """
+# création de deux colonnes
+col1, empty_mid, col2 = st.columns([1.2, 0.2 , 1.5])
+col1.image("./images/img_sign_main.JPG")
+
 bottom_element.write(how_work, unsafe_allow_html=True)
 
 #dictionary of traduction letters
@@ -81,9 +97,10 @@ RTC_CONFIGURATION = RTCConfiguration(
     {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
 )
 
-@st.cache(allow_output_mutation=True)
+#@st.cache(allow_output_mutation=True)
+@st.experimental_singleton
 def load_mo():
-    model = load_model('models/model_resnet_50_V2_83_49.h5')
+    model = load_model('models/model_resnet50_V2_8830.h5')
     return model
 
 # Your class where you put the intelligence
@@ -96,8 +113,6 @@ class SignPredictor(VideoProcessorBase):
         self.counter = 0
         self.l=[]
         self.word=[]
-        self.result_queue = queue.Queue()
-        self.result_queue_letter = queue.Queue()
         self.result_queue_word = queue.Queue()
 
     def find_hands(self, image):
@@ -108,11 +123,14 @@ class SignPredictor(VideoProcessorBase):
         if hands:
             bbox1 = hands[0]["bbox"]  # Bounding box info x,y,w,h
             x, y, w, h = bbox1
+            
+            #récup img plus grande que la bbox1 de base
             x_square = int(x - 0.2 * w)
             y_square = int(y - 0.2 * h)
             w_square = int(x + 1.2 * w)
             h_square = int(y + 1.2 * h)
 
+            #anticipe erreur de x, y négatifs
             if x_square < 0 :
                 x_square = 0
             if y_square < 0:
@@ -127,6 +145,8 @@ class SignPredictor(VideoProcessorBase):
                 tf.image.resize_with_pad(hand_img, 256, 256))  # resize image to match model's expected sizing
             img_hand_resize = img_hand_resize.reshape(1, 256, 256, 3)
             img_hand_resize = tf.math.divide(img_hand_resize, 255)
+            
+            #couleur img_main 
             channels = tf.unstack(img_hand_resize, axis=-1)
             img_hand_resize = tf.stack([channels[2], channels[1], channels[0]],
                                        axis=-1)
@@ -134,6 +154,7 @@ class SignPredictor(VideoProcessorBase):
             prediction = self.model.predict(img_hand_resize)
             probabs = round(max(self.model.predict_proba(img_hand_resize)[0]),2)
             pred = np.argmax(prediction)
+            
             self.counter +=1
             if self.counter % 1 == 0:
                 cv2.putText(image_hand, f'{dict_letter[pred]}',
@@ -142,31 +163,20 @@ class SignPredictor(VideoProcessorBase):
                 cv2.putText(image_hand, f'{str(probabs)}',
                             (int(x_square + 1.5 * w), int(h_square - 0.5 * h)),
                             cv2.FONT_HERSHEY_PLAIN, 2, dict_colors[pred], 2)
-
-                print(dict_letter[pred])
-                self.l.append(dict_letter[pred])
+                
+                if probabs > 0.95:
+                    self.l.append(dict_letter[pred])
 
                 # COLORING BOX
-
                 cv2.rectangle(
                     image_hand, (x_square, y_square),
                     (w_square, h_square),
                     (dict_colors[pred]), 2)
 
-                # QUEUE IN STREAMLIT:
-
-                self.result_queue.put(dict_letter[pred])
-
                 # WORD CREATION
-
-                if len(self.l)==30:
-                    predicted_letter = max(set(self.l), key=self.l.count)
-                    self.result_queue_letter.put(predicted_letter)
-                    print(f'the predicted letter is {predicted_letter}')
-
+                if len(self.l)==20:
                     self.word.append(max(set(self.l), key=self.l.count))
-                    self.result_queue_word.put(self.word)
-                    print(self.word)
+                    self.result_queue_word.put(self.word)# QUEUE IN STREAMLIT
                     self.l=[]
         else:
             if self.word:
@@ -181,23 +191,21 @@ class SignPredictor(VideoProcessorBase):
         hands, annotated_image = self.find_hands(image)
         return av.VideoFrame.from_ndarray(annotated_image, format="bgr24")
 
-
-webrtc_ctx = webrtc_streamer(
-        key="object-detection",
-        mode=WebRtcMode.SENDRECV,
-        rtc_configuration=RTC_CONFIGURATION,
-        video_processor_factory=SignPredictor,
-        media_stream_constraints={"video": True, "audio": False},
-        async_processing=True,
-    )
-
-final_word = ""
+with col2:
+    webrtc_ctx = webrtc_streamer(
+            key="object-detection",
+            mode=WebRtcMode.SENDRECV,
+            rtc_configuration=RTC_CONFIGURATION,
+            video_processor_factory=SignPredictor,
+            media_stream_constraints={"video": True, "audio": False},
+            async_processing=True,
+        )
 
 # Final word
+final_word = ""
+
 if webrtc_ctx.state.playing:
-
     labels_placeholder = st.empty()
-
     while True:
         if webrtc_ctx.video_processor:
             try:
@@ -208,6 +216,5 @@ if webrtc_ctx.state.playing:
                 labels_placeholder.title(final_word)
             except queue.Empty:
                 result = final_word
-
         else:
             break
