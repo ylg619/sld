@@ -33,54 +33,58 @@ st.set_page_config(
 
 # specify the primary menu definition
 menu_data = [
+        {'icon': "fas fa-video", 'label':"Webcam"},
         {'icon':"fas fa-hand-sparkles",'label':"Sign learning"},
         {'icon': "fas fa-bus", 'label':"Le Wagon"}, #can add a tooltip message
-        {'icon': "", 'label':"Teammates",'ttip':"Best team ever!"},
+        {'icon': "fas fa-users", 'label':"Teammates"},
+        {'icon': "fab fa-youtube", 'label':"Demo Day"},
 ]
 # we can override any part of the primary colors of the menu
 over_theme = {'txc_inactive': '#FFFFFF'}
 menu_id = hc.nav_bar(menu_definition=menu_data,home_name='Home',override_theme=over_theme)
 
-# navbar menu Le Wagon
+####### navbar menu Le Wagon ########
 if menu_id == "Le Wagon":
-    pass
+    col1, col2 = st.columns([8,2])
+    img_logo = Image.open("./images/logo.jpg")
+    img_logo2 = Image.open("./images/logo_sld.JPG") 
+    col2.image(img_logo)
+    col2.write("<h1 style='text-align: center;'>X</h1>     ", unsafe_allow_html=True)
+    col2.image(img_logo2)
 
-# navbar menu Teammates
+    info2 = """
+    <h1>Change your life, learn to <i class="highlighted highlighted-red">code</i>.</h1>
+    <br>
+    <p class="sub-title">Through immersive coding bootcamps, Le Wagon teaches you the skills and entrepreneurial mindset you need to thrive, now and in the future.</p>
+    <br>
+    """
+    col1.write(info2, unsafe_allow_html=True)
+    link = '[Le Wagon](https://www.lewagon.com/fr)'
+    col1.markdown(link, unsafe_allow_html=True)
+    
+    
+
+####### navbar menu Teammates ########
 if menu_id == "Teammates":
     pass
 
 
-# navbar menu Sign Learning
+####### navbar menu Sign Learning ########
 if menu_id == "Sign learning":
-    # Starting random state
-    random_state = 78
-
-    # Number of results to return
-    top_k = 12
-    img = Image.open("./images/img_sign_main.JPG")
-    col1, col2, col3 = st.columns([2,5,2])
-
-    col2.image(img)
+    col1, col2, col3 = st.columns([4,5,4])
+    img_signs = Image.open("./images/img_sign_main.JPG")
+    col2.image(img_signs)
 
 
-
-# navbar menu Home
+####### navbar menu Home ########
 if menu_id == "Home":
-     
-    # Starting random state
-    random_state = 78
-
-    # Number of results to return
-    top_k = 12
 
     img = Image.open("./images/hands.JPG")
-
     st.image(img)
 
     # initialise the elements
     info_element = st.empty()
-    bottom_element = st.empty()
-
+    
     #info
     info = '''
     <p>A real-time sign language translator permit communication between the deaf
@@ -95,26 +99,19 @@ if menu_id == "Home":
 
     info_element.write(info, unsafe_allow_html=True)
 
-    #backgroud image
-    empty_col_bg, col_bg = st.columns([0.5, 1.5])
-
-
-
-    st.markdown("<br>", unsafe_allow_html=True)
-
-
-
+####### navbar menu Webcam ########
+if menu_id == "Webcam":
+    
+    col1, col2, empty_right = st.columns([0.7, 1 , 0.2])
+    
     how_work="""Jumpstart your machine learning code:<br>
     1. Select your device<br>
     2. Click on start<br>
-    3. Show your hands and do magic! :sparkles:<br>
+    3. Show your hands and do magic! ✨<br><br><br><br>
     """
-    # création de deux colonnes
-    empty_left, col2, empty_right = st.columns([0.5, 1.5 , 0.5])
-    #col1.image("./images/img_sign_main.JPG")
 
-    bottom_element.write(how_work, unsafe_allow_html=True)
-
+    col1.write(f"<div style='text-align: center;'>{how_work}</div>", unsafe_allow_html=True)
+    
     #dictionary of traduction letters
     dict_letter = {0:'A', 1:'B', 2:'C', 3:'D', 4:'E', 5:'F', 6:'G', 7:'H', 8:'I', 9:'K', 10:'L', 11:'M',
                 12:'N', 13:'O', 14:'P', 15:'Q', 16:'R', 17:'S', 18:'T', 19:'U', 20:'V', 21:'W', 22:'X', 23:'Y' }
@@ -235,21 +232,22 @@ if menu_id == "Home":
             )
 
     # Final word
-    final_word = ""
+    with col1:
+        final_word = ""
 
-    if webrtc_ctx.state.playing:
-        labels_placeholder = st.empty()
-        while True:
-            if webrtc_ctx.video_processor:
-                try:
-                    result = webrtc_ctx.video_processor.result_queue_word.get(timeout=1.0)
-                    final_word = ""
-                    for value in result:
-                        final_word = final_word + value
-                    #labels_placeholder.title(final_word)
-                    labels_placeholder.markdown(f"<h1 style='text-align: center;'>{final_word}</h1>", unsafe_allow_html=True)
-                except queue.Empty:
-                    result = final_word
-            else:
-                break
+        if webrtc_ctx.state.playing:
+            labels_placeholder = st.empty()
+            while True:
+                if webrtc_ctx.video_processor:
+                    try:
+                        result = webrtc_ctx.video_processor.result_queue_word.get(timeout=1.0)
+                        final_word = ""
+                        for value in result:
+                            final_word = final_word + value
+                        #labels_placeholder.title(final_word)
+                        labels_placeholder.markdown(f"<h1 style='text-align: center; color: red;'>{final_word}</h1>", unsafe_allow_html=True)
+                    except queue.Empty:
+                        result = final_word
+                else:
+                    break
 
