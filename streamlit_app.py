@@ -43,7 +43,7 @@ menu_data = [
         {'icon': "fab fa-youtube", 'label':"Demo Day"},
 ]
 # we can override any part of the primary colors of the menu
-over_theme = {'txc_inactive': '#FFFFFF'}
+over_theme = {'txc_inactive': '#FFFFFF', 'menu_background' : '#2176ae'}
 menu_id = hc.nav_bar(menu_definition=menu_data,home_name='Home',override_theme=over_theme)
 
 ####### navbar menu Le Wagon ########
@@ -66,11 +66,21 @@ if menu_id == "Le Wagon":
     col1.markdown(link, unsafe_allow_html=True)
 
 
-
 ####### navbar menu Teammates ########
 if menu_id == "Teammates":
-    pass
-
+    col1,empty1, col2,empty2 ,col3 = st.columns([0.5,0.5,0.7,0.5,0.5])
+    col1.markdown( "[![this is an image link](https://cdn.iconscout.com/icon/free/png-256/github-2690381-2232884.png)](https://github.com/Dannxs)")
+    col1.markdown("<p style='text-align: center;'><b>Danny Cardoso</p>", unsafe_allow_html=True)
+    col1.markdown("<h2 style='text-align: center;'>Follow us!</h2><br>", unsafe_allow_html=True)
+    col3.markdown( "[![this is an image link](https://cdn.iconscout.com/icon/free/png-256/github-2690381-2232884.png)](https://github.com/jvesp)")
+    col3.markdown("<p style='text-align: center;'><b>Julien Vesperini</p>", unsafe_allow_html=True)
+    col3.markdown("<h2 style='text-align: center;'>Follow us!</h2><br>", unsafe_allow_html=True)
+    img_follow = Image.open("./images/follow_us.JPG")
+    col2.image(img_follow)
+    col1.markdown( "[![this is an image link](https://cdn.iconscout.com/icon/free/png-256/github-2690381-2232884.png)](https://github.com/glauret)")
+    col1.markdown("<p style='text-align: center;'><b>Guillaume Lauret</p>", unsafe_allow_html=True)   
+    col3.markdown( "[![this is an image link](https://cdn.iconscout.com/icon/free/png-256/github-2690381-2232884.png)](https://github.com/selmalopez)")
+    col3.markdown("<p style='text-align: center;'><b>Selma Lopez</p>", unsafe_allow_html=True)  
 
 ####### navbar menu Sign Learning ########
 if menu_id == "Sign learning":
