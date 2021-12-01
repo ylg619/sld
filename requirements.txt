@@ -38,3 +38,5 @@ pyyaml
 av
 queue
 emoji
+PIL
+hydralit
