@@ -23,17 +23,19 @@ mlflow
 s3fs
 
 # utilities
+aiortc==1.2.1
 six>=1.14
 joblib
 memoized-property
 termcolor
 cvzone
-opencv-python
-mediapipe
-streamlit-webrtc
-streamlit
+opencv-python-headless
+opencv-contrib-python-headless
+mediapipe==0.8.9
+streamlit-webrtc==0.31.3
+streamlit==1.2.0
 PyDrive
-tensorflow
+tensorflow==2.7.0
 pyyaml
 av
 queue

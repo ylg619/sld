@@ -10,7 +10,10 @@ import numpy as np
 import queue
 from PIL import Image
 import hydralit_components as hc
-import random
+import urllib
+import urllib.request
+import os
+from pathlib import Path
 
 # Import component
 from streamlit_webrtc import (
@@ -55,7 +58,7 @@ if menu_id == "Le Wagon":
     info2 = """
     <h1>Change your life, learn to <i class="highlighted highlighted-red">code</i>.</h1>
     <br>
-    <p class="sub-title">Through immersive coding bootcamps, Le Wagon teaches you the skills and entrepreneurial mindset you need to thrive, now and in the future.</p>
+    <p>Through immersive coding bootcamps, Le Wagon teaches you the skills and entrepreneurial mindset you need to thrive, now and in the future.</p>
     <br>
     """
     col1.write(info2, unsafe_allow_html=True)
@@ -127,10 +130,26 @@ if menu_id == "Webcam":
         {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
     )
 
+    #getting cwd
+    # HERE = Path(__file__).parent
+    # print(os.listdir(HERE))
+    # if not 'model.h5' in os.listdir(HERE):
+    #     txt = st.warning("Téléchargement du modèle")
+    #     print("loading model")
+    #     url = 'https://www.dropbox.com/s/sffb5ew98us9gxa/model_resnet50_V2_8830.h5?dl=1'
+    #     u = urllib.request.urlopen(url)
+    #     data = u.read()
+    #     u.close()
+    #     with open('model.h5', 'wb') as f:
+    #         f.write(data)
+    #     print("model loaded")
+    #     txt.success("Téléchargement terminé")
+
+    
     #@st.cache(allow_output_mutation=True)
     @st.experimental_singleton
     def load_mo():
-        model = load_model('models/model_resnet50_V2_8830.h5')
+        model = load_model('models/model_resnet50_V2_8830.h5') #model.h5
         return model
 
     # Your class where you put the intelligence
@@ -181,8 +200,9 @@ if menu_id == "Webcam":
                 img_hand_resize = tf.stack([channels[2], channels[1], channels[0]],
                                         axis=-1)
 
-                prediction = self.model.predict(img_hand_resize)
-                probabs = round(max(self.model.predict_proba(img_hand_resize)[0]),2)
+                prediction = self.model.predict(img_hand_resize)[0]
+
+                probabs = round(prediction[np.argmax(prediction)], 2)
                 pred = np.argmax(prediction)
                 
                 self.counter +=1
@@ -194,7 +214,7 @@ if menu_id == "Webcam":
                                 (int(x_square + 1.5 * w), int(h_square - 0.5 * h)),
                                 cv2.FONT_HERSHEY_PLAIN, 2, dict_colors[pred], 2)
                     
-                    if probabs > 0.75:
+                    if probabs > 0.8:
                         self.l.append(dict_letter[pred])
 
                     # COLORING BOX
@@ -204,7 +224,7 @@ if menu_id == "Webcam":
                         (dict_colors[pred]), 2)
 
                     # WORD CREATION
-                    if len(self.l)==20:
+                    if len(self.l)==15:
                         self.word.append(max(set(self.l), key=self.l.count))
                         self.result_queue_word.put(self.word)# QUEUE IN STREAMLIT
                         self.l=[]
