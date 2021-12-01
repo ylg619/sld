@@ -2,6 +2,7 @@
 
 import cv2
 from sld.handdetector import HandDetector
+from handdetector import HandDetector
 import av
 import streamlit as st
 import tensorflow as tf
@@ -10,6 +11,7 @@ import numpy as np
 import queue
 from PIL import Image
 import hydralit_components as hc
+import random
 
 # Import component
 from streamlit_webrtc import (
@@ -251,3 +253,4 @@ if menu_id == "Home":
                     result = final_word
             else:
                 break
+
