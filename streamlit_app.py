@@ -7,7 +7,7 @@ import streamlit as st
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 import numpy as np
-import queue
+#import queue #decomment all queues to have it on the website
 from PIL import Image
 import hydralit_components as hc
 import urllib
@@ -50,7 +50,7 @@ menu_id = hc.nav_bar(menu_definition=menu_data,home_name='Home',override_theme=o
 if menu_id == "Le Wagon":
     col1, col2 = st.columns([8,2])
     img_logo = Image.open("./images/logo.jpg")
-    img_logo2 = Image.open("./images/logo_sld.JPG") 
+    img_logo2 = Image.open("./images/logo_sld.JPG")
     col2.image(img_logo)
     col2.write("<h1 style='text-align: center;'>X</h1>     ", unsafe_allow_html=True)
     col2.image(img_logo2)
@@ -97,7 +97,7 @@ if menu_id == "Home":
 
     # initialise the elements
     info_element = st.empty()
-    
+
     #info
     info = '''
     <p>A real-time sign language translator permit communication between the deaf
@@ -114,9 +114,9 @@ if menu_id == "Home":
 
 ####### navbar menu Webcam ########
 if menu_id == "Webcam":
-    
+
     col1, col2, empty_right = st.columns([0.7, 1 , 0.2])
-    
+
     how_work="""Jumpstart your machine learning code:<br>
     1. Select your device<br>
     2. Click on start<br>
@@ -124,7 +124,7 @@ if menu_id == "Webcam":
     """
 
     col1.write(f"<div style='text-align: center;'>{how_work}</div>", unsafe_allow_html=True)
-    
+
     #dictionary of traduction letters
     dict_letter = {0:'A', 1:'B', 2:'C', 3:'D', 4:'E', 5:'F', 6:'G', 7:'H', 8:'I', 9:'K', 10:'L', 11:'M',
                 12:'N', 13:'O', 14:'P', 15:'Q', 16:'R', 17:'S', 18:'T', 19:'U', 20:'V', 21:'W', 22:'X', 23:'Y' }
@@ -140,7 +140,7 @@ if menu_id == "Webcam":
         {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
     )
 
-    #getting cwd
+    # getting cwd
     # HERE = Path(__file__).parent
     # print(os.listdir(HERE))
     # if not 'model.h5' in os.listdir(HERE):
@@ -155,11 +155,10 @@ if menu_id == "Webcam":
     #     print("model loaded")
     #     txt.success("Téléchargement terminé")
 
-    
     #@st.cache(allow_output_mutation=True)
     @st.experimental_singleton
     def load_mo():
-        model = load_model('models/model_resnet50_V2_8830.h5') #model.h5
+        model = load_model('models/model_resnet50_V2_8830.h5')
         return model
 
     # Your class where you put the intelligence
@@ -172,7 +171,7 @@ if menu_id == "Webcam":
             self.counter = 0
             self.l=[]
             self.word=[]
-            self.result_queue_word = queue.Queue()
+            #self.result_queue_word = queue.Queue()
 
         def find_hands(self, image):
 
@@ -182,7 +181,7 @@ if menu_id == "Webcam":
             if hands:
                 bbox1 = hands[0]["bbox"]  # Bounding box info x,y,w,h
                 x, y, w, h = bbox1
-                
+
                 #récup img plus grande que la bbox1 de base
                 x_square = int(x - 0.2 * w)
                 y_square = int(y - 0.2 * h)
@@ -204,8 +203,8 @@ if menu_id == "Webcam":
                     tf.image.resize_with_pad(hand_img, 256, 256))  # resize image to match model's expected sizing
                 img_hand_resize = img_hand_resize.reshape(1, 256, 256, 3)
                 img_hand_resize = tf.math.divide(img_hand_resize, 255)
-                
-                #couleur img_main 
+
+                #couleur img_main
                 channels = tf.unstack(img_hand_resize, axis=-1)
                 img_hand_resize = tf.stack([channels[2], channels[1], channels[0]],
                                         axis=-1)
@@ -214,35 +213,52 @@ if menu_id == "Webcam":
 
                 probabs = round(prediction[np.argmax(prediction)], 2)
                 pred = np.argmax(prediction)
-                
+
+
                 self.counter +=1
                 if self.counter % 1 == 0:
-                    cv2.putText(image_hand, f'{dict_letter[pred]}',
-                                (int(x_square + 1.5 * w), int(h_square - 0.7 * h)),
-                                cv2.FONT_HERSHEY_PLAIN, 2, dict_colors[pred], 2)
-                    cv2.putText(image_hand, f'{str(probabs)}',
-                                (int(x_square + 1.5 * w), int(h_square - 0.5 * h)),
-                                cv2.FONT_HERSHEY_PLAIN, 2, dict_colors[pred], 2)
-                    
+
                     if probabs > 0.8:
                         self.l.append(dict_letter[pred])
 
                     # COLORING BOX
-                    cv2.rectangle(
-                        image_hand, (x_square, y_square),
-                        (w_square, h_square),
-                        (dict_colors[pred]), 2)
+                    cv2.rectangle(image_hand, (x_square, y_square),
+                                  (w_square, h_square), (dict_colors[pred]), 2)
+
+                    # Finds space required by the text so that we can put a background with that amount of width.
+                    (w, h), _ = cv2.getTextSize(f'{dict_letter[pred]} - {str(probabs)}',
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, 1)
+
+                    # Prints the box, letter and proba
+                    img = cv2.rectangle(image_hand, (x_square, y_square - 20),
+                                        (x_square + w, y_square),
+                                        (dict_colors[pred]), -1)
+                    img = cv2.putText(image_hand,
+                                      f"{dict_letter[pred]} - {str(probabs)}",
+                                      (x_square, y_square - 5), cv2.FONT_HERSHEY_SIMPLEX,
+                                      0.6, (0,0,0), 2)
 
                     # WORD CREATION
-                    if len(self.l)==15:
+                    if len(self.l) == 15:
                         self.word.append(max(set(self.l), key=self.l.count))
-                        self.result_queue_word.put(self.word)# QUEUE IN STREAMLIT
-                        self.l=[]
+                        self.l = []
+                    final_word = ""
+                    for letters in self.word:
+                        final_word = final_word + letters
+
+                    # Draw rectangle    p1(x,y)    p2(x,y)    Student name box
+
+                    # cv2.rectangle(image_hand, (195, 55), (250, 80), (42, 219, 151), cv2.FILLED)
+                    font = cv2.FONT_HERSHEY_DUPLEX
+                    cv2.putText(image_hand, final_word, (200, 60), font, 1.5,
+                                (255, 255, 255), 4)
+
             else:
                 if self.word:
                     if self.word[-1] != " ":
                         self.word.append(" ")
-                        self.result_queue_word.put(self.word)
+                        #self.result_queue_word.put(self.word)
+
 
             return hands, image_hand
 
@@ -262,22 +278,21 @@ if menu_id == "Webcam":
             )
 
     # Final word
-    with col1:
-        final_word = ""
+    # with col1:
+    #     final_word = ""
 
-        if webrtc_ctx.state.playing:
-            labels_placeholder = st.empty()
-            while True:
-                if webrtc_ctx.video_processor:
-                    try:
-                        result = webrtc_ctx.video_processor.result_queue_word.get(timeout=1.0)
-                        final_word = ""
-                        for value in result:
-                            final_word = final_word + value
-                        #labels_placeholder.title(final_word)
-                        labels_placeholder.markdown(f"<h1 style='text-align: center; color: red;'>{final_word}</h1>", unsafe_allow_html=True)
-                    except queue.Empty:
-                        result = final_word
-                else:
-                    break
-
+    #     if webrtc_ctx.state.playing:
+    #         labels_placeholder = st.empty()
+    #         while True:
+    #             if webrtc_ctx.video_processor:
+    #                 try:
+    #                     result = webrtc_ctx.video_processor.result_queue_word.get(timeout=1.0)
+    #                     final_word = ""
+    #                     for value in result:
+    #                         final_word = final_word + value
+    #                     labels_placeholder.title(final_word)
+    #                     labels_placeholder.markdown(f"<h1 style='text-align: center; color: red;'>{final_word}</h1>", unsafe_allow_html=True)
+    #                 except queue.Empty:
+    #                     result = final_word
+    #             else:
+    #                 break
