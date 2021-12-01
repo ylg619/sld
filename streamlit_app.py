@@ -115,15 +115,15 @@ if menu_id == "Home":
 ####### navbar menu Webcam ########
 if menu_id == "Webcam":
 
-    col1, col2, empty_right = st.columns([0.7, 1 , 0.2])
+    empty_left, col2, empty_right = st.columns([0.5, 1 , 0.5])
 
-    how_work="""Jumpstart your machine learning code:<br>
-    1. Select your device<br>
-    2. Click on start<br>
-    3. Show your hands and do magic! ✨<br><br><br><br>
-    """
+    # how_work="""Jumpstart your machine learning code:<br>
+    # 1. Select your device<br>
+    # 2. Click on start<br>
+    # 3. Show your hands and do magic! ✨<br><br><br><br>
+    # """
 
-    col1.write(f"<div style='text-align: center;'>{how_work}</div>", unsafe_allow_html=True)
+    # col1.write(f"<div style='text-align: center;'>{how_work}</div>", unsafe_allow_html=True)
 
     #dictionary of traduction letters
     dict_letter = {0:'A', 1:'B', 2:'C', 3:'D', 4:'E', 5:'F', 6:'G', 7:'H', 8:'I', 9:'K', 10:'L', 11:'M',
