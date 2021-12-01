@@ -1,7 +1,6 @@
 # CV2 module
 
 import cv2
-from sld.handdetector import HandDetector
 from handdetector import HandDetector
 import av
 import streamlit as st
