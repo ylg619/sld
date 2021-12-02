@@ -9,6 +9,7 @@ import numpy as np
 from PIL import Image
 import hydralit_components as hc
 from bokeh.models.widgets import Div
+from model_utils import build_model
 
 # Import component
 from streamlit_webrtc import (
@@ -170,7 +171,9 @@ if menu_id == "Webcam":
     #@st.cache(allow_output_mutation=True)
     @st.experimental_singleton
     def load_mo():
-        model = load_model('models/model_resnet50_V2_8830.h5')
+        #model = load_model('models/model_resnet50_V2_8830.h5')
+        model = build_model()
+        model.load_weights("models/model_resnet50_V2_8830_weights.h5")
         return model
 
     # Your class where you put the intelligence
