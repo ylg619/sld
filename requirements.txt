@@ -42,3 +42,4 @@ queue
 emoji
 PIL
 hydralit
+bokeh==2.4.1
