@@ -8,7 +8,7 @@ import numpy as np
 #import queue #decomment all queues to have it on the website
 from PIL import Image
 import hydralit_components as hc
-from bokeh.models.widgets import Div
+#from bokeh.models.widgets import Div
 from model_utils import build_model
 
 # Import component
@@ -63,24 +63,24 @@ if menu_id == "Le Wagon":
     """
     col1.write(info2, unsafe_allow_html=True)
     
-    m = col1.markdown("""
-    <style>
-    div.stButton > button:first-child {
-        background-color: #e63946;
-        color:#ffffff;
-    }
-    div.stButton > button:hover {
-        background-color: #f77f00;
-        color:#ffffff;
-        }
-    </style>""", unsafe_allow_html=True)
+    #m = col1.markdown("""
+    #<style>
+    #div.stButton > button:first-child {
+    #    background-color: #e63946;
+    #    color:#ffffff;
+    #}
+    #div.stButton > button:hover {
+    #    background-color: #f77f00;
+    #    color:#ffffff;
+    #    }
+    #</style>""", unsafe_allow_html=True)
     
-    link = '[Le Wagon](https://www.lewagon.com/fr)'
-    if col1.button(label="Go to LeWagon Website!"):
-            js = "window.open('https://www.lewagon.com/fr')"  # New tab or window
-            html = '<img src onerror="{}">'.format(js)
-            div = Div(text=html)
-            st.bokeh_chart(div)
+    #link = '[Le Wagon](https://www.lewagon.com/fr)'
+    #if col1.button(label="Go to LeWagon Website!"):
+    #        js = "window.open('https://www.lewagon.com/fr')"  # New tab or window
+    #        html = '<img src onerror="{}">'.format(js)
+    #        div = Div(text=html)
+    #        st.bokeh_chart(div)
 
 
 ##########################################
