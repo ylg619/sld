@@ -167,9 +167,9 @@ if menu_id == "Webcam":
     #         f.write(data)
     #     print("model loaded")
     #     txt.success("Téléchargement terminé")
-
+    #@st.experimental_singleton
     #@st.cache(allow_output_mutation=True)
-    @st.experimental_singleton
+    @st.cache(allow_output_mutation=True)
     def load_mo():
         #model = load_model('models/model_resnet50_V2_8830.h5')
         model = build_model()
