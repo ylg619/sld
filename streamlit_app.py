@@ -8,10 +8,6 @@ import numpy as np
 #import queue #decomment all queues to have it on the website
 from PIL import Image
 import hydralit_components as hc
-import urllib
-import urllib.request
-import os
-from pathlib import Path
 from bokeh.models.widgets import Div
 
 # Import component
