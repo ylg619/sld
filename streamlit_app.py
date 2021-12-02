@@ -87,18 +87,18 @@ if menu_id == "Le Wagon":
 ##########################################
 
 if menu_id == "Teammates":
-    col1,empty1, col2,empty2 ,col3 = st.columns([0.5,0.6,0.6,0.6,0.5])
-    col1.markdown( "[![this is an image link](https://cdn.iconscout.com/icon/free/png-256/github-2690381-2232884.png)](https://github.com/Dannxs)")
+    empty1, col1,empty2, col2,empty3 ,col3, empty4 = st.columns([0.6,0.4,0.6,0.9,0.6,0.4,0.6])
+    col1.markdown( "[![this is an image link](https://img.icons8.com/nolan/2x/github.png)](https://github.com/Dannxs)")
     col1.markdown("<p style='text-align: center;'><b>Danny Cardoso</p>", unsafe_allow_html=True)
     col1.markdown("<h2 style='text-align: center;'>Follow us!</h2>", unsafe_allow_html=True)
-    col3.markdown( "[![this is an image link](https://cdn.iconscout.com/icon/free/png-256/github-2690381-2232884.png)](https://github.com/jvesp)")
+    col3.markdown( "[![this is an image link](https://img.icons8.com/nolan/2x/github.png)](https://github.com/jvesp)")
     col3.markdown("<p style='text-align: center;'><b>Julien Vesperini</p>", unsafe_allow_html=True)
-    col3.markdown("<h2 style='text-align: center;'>Follow us!</h2>", unsafe_allow_html=True)
+    col3.markdown("<h2 style='text-align: center;'>Favorite Team!</h2>", unsafe_allow_html=True)
     img_follow = Image.open("./images/follow_us.JPG")
     col2.image(img_follow)
-    col1.markdown( "[![this is an image link](https://cdn.iconscout.com/icon/free/png-256/github-2690381-2232884.png)](https://github.com/glauret)")
+    col1.markdown( "[![this is an image link](https://img.icons8.com/nolan/2x/github.png)](https://github.com/glauret)")
     col1.markdown("<p style='text-align: center;'><b>Guillaume Lauret</p>", unsafe_allow_html=True)   
-    col3.markdown( "[![this is an image link](https://cdn.iconscout.com/icon/free/png-256/github-2690381-2232884.png)](https://github.com/selmalopez)")
+    col3.markdown( "[![this is an image link](https://img.icons8.com/nolan/2x/github.png)](https://github.com/selmalopez)")
     col3.markdown("<p style='text-align: center;'><b>Selma Lopez</p>", unsafe_allow_html=True)
       
 ##########################################
@@ -153,7 +153,6 @@ if menu_id == "Webcam":
         {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
     )
 
-    # getting cwd
     # HERE = Path(__file__).parent
     # print(os.listdir(HERE))
     # if not 'model.h5' in os.listdir(HERE):
