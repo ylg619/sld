@@ -1,5 +1,3 @@
-# CV2 module
-
 import cv2
 from handdetector import HandDetector
 import av
@@ -14,6 +12,7 @@ import urllib
 import urllib.request
 import os
 from pathlib import Path
+from bokeh.models.widgets import Div
 
 # Import component
 from streamlit_webrtc import (
@@ -46,58 +45,85 @@ menu_data = [
 over_theme = {'txc_inactive': '#FFFFFF', 'menu_background' : '#2176ae'}
 menu_id = hc.nav_bar(menu_definition=menu_data,home_name='Home',override_theme=over_theme)
 
-####### navbar menu Le Wagon ########
+##########################################
+######### navbar menu Le Wagon ###########
+##########################################
+
 if menu_id == "Le Wagon":
-    col1, col2 = st.columns([8,2])
-    img_logo = Image.open("./images/logo.jpg")
+    col1, col2, empty_col = st.columns([8,1,1])
+    col2.write("<h1 style='text-align: center;'></h1><br><br>", unsafe_allow_html=True)
+    img_logo = Image.open("./images/logo_wagon.JPG")
     img_logo2 = Image.open("./images/logo_sld.JPG")
     col2.image(img_logo)
-    col2.write("<h1 style='text-align: center;'>X</h1>     ", unsafe_allow_html=True)
     col2.image(img_logo2)
 
+    img_wagon = Image.open("./images/img_code.JPG")
+    col1.image(img_wagon)
     info2 = """
-    <h1>Change your life, learn to <i class="highlighted highlighted-red">code</i>.</h1>
     <br>
-    <p>Through immersive coding bootcamps, Le Wagon teaches you the skills and entrepreneurial mindset you need to thrive, now and in the future.</p>
+    <h3 style='text-align: center;'>Through immersive coding bootcamps!</h3>
     <br>
     """
     col1.write(info2, unsafe_allow_html=True)
+    
+    m = col1.markdown("""
+    <style>
+    div.stButton > button:first-child {
+        background-color: #e63946;
+        color:#ffffff;
+    }
+    div.stButton > button:hover {
+        background-color: #f77f00;
+        color:#ffffff;
+        }
+    </style>""", unsafe_allow_html=True)
+    
     link = '[Le Wagon](https://www.lewagon.com/fr)'
-    col1.markdown(link, unsafe_allow_html=True)
+    if col1.button(label="Go to LeWagon Website!"):
+            js = "window.open('https://www.lewagon.com/fr')"  # New tab or window
+            html = '<img src onerror="{}">'.format(js)
+            div = Div(text=html)
+            st.bokeh_chart(div)
 
 
-####### navbar menu Teammates ########
+##########################################
+######### navbar menu Teammates ##########
+##########################################
+
 if menu_id == "Teammates":
-    col1,empty1, col2,empty2 ,col3 = st.columns([0.5,0.5,0.7,0.5,0.5])
+    col1,empty1, col2,empty2 ,col3 = st.columns([0.5,0.6,0.6,0.6,0.5])
     col1.markdown( "[![this is an image link](https://cdn.iconscout.com/icon/free/png-256/github-2690381-2232884.png)](https://github.com/Dannxs)")
     col1.markdown("<p style='text-align: center;'><b>Danny Cardoso</p>", unsafe_allow_html=True)
-    col1.markdown("<h2 style='text-align: center;'>Follow us!</h2><br>", unsafe_allow_html=True)
+    col1.markdown("<h2 style='text-align: center;'>Follow us!</h2>", unsafe_allow_html=True)
     col3.markdown( "[![this is an image link](https://cdn.iconscout.com/icon/free/png-256/github-2690381-2232884.png)](https://github.com/jvesp)")
     col3.markdown("<p style='text-align: center;'><b>Julien Vesperini</p>", unsafe_allow_html=True)
-    col3.markdown("<h2 style='text-align: center;'>Follow us!</h2><br>", unsafe_allow_html=True)
+    col3.markdown("<h2 style='text-align: center;'>Follow us!</h2>", unsafe_allow_html=True)
     img_follow = Image.open("./images/follow_us.JPG")
     col2.image(img_follow)
     col1.markdown( "[![this is an image link](https://cdn.iconscout.com/icon/free/png-256/github-2690381-2232884.png)](https://github.com/glauret)")
     col1.markdown("<p style='text-align: center;'><b>Guillaume Lauret</p>", unsafe_allow_html=True)   
     col3.markdown( "[![this is an image link](https://cdn.iconscout.com/icon/free/png-256/github-2690381-2232884.png)](https://github.com/selmalopez)")
-    col3.markdown("<p style='text-align: center;'><b>Selma Lopez</p>", unsafe_allow_html=True)  
-
+    col3.markdown("<p style='text-align: center;'><b>Selma Lopez</p>", unsafe_allow_html=True)
+      
+##########################################
 ####### navbar menu Sign Learning ########
+##########################################
+
 if menu_id == "Sign learning":
     col1, col2, col3 = st.columns([4,5,4])
     img_signs = Image.open("./images/img_sign_main.JPG")
     col2.image(img_signs)
 
+##########################################
+########### navbar menu Home #############
+##########################################
 
-####### navbar menu Home ########
 if menu_id == "Home":
 
     img = Image.open("./images/hands.JPG")
     st.image(img)
-
     # initialise the elements
     info_element = st.empty()
-
     #info
     info = '''
     <p>A real-time sign language translator permit communication between the deaf
@@ -109,28 +135,19 @@ if menu_id == "Home":
     """
     [![Star](https://img.shields.io/github/stars/jvesp/sld.svg?logo=github&style=social)](https://github.com/jvesp/sld)
     """
-
     info_element.write(info, unsafe_allow_html=True)
+    
+##########################################
+########## navbar menu Webcam ############
+##########################################
 
-####### navbar menu Webcam ########
 if menu_id == "Webcam":
-
     empty_left, col2, empty_right = st.columns([0.5, 1 , 0.5])
-
-    # how_work="""Jumpstart your machine learning code:<br>
-    # 1. Select your device<br>
-    # 2. Click on start<br>
-    # 3. Show your hands and do magic! ✨<br><br><br><br>
-    # """
-
-    # col1.write(f"<div style='text-align: center;'>{how_work}</div>", unsafe_allow_html=True)
 
     #dictionary of traduction letters
     dict_letter = {0:'A', 1:'B', 2:'C', 3:'D', 4:'E', 5:'F', 6:'G', 7:'H', 8:'I', 9:'K', 10:'L', 11:'M',
                 12:'N', 13:'O', 14:'P', 15:'Q', 16:'R', 17:'S', 18:'T', 19:'U', 20:'V', 21:'W', 22:'X', 23:'Y' }
-
     COLORS = np.random.uniform(0, 255, size=(len(dict_letter), 3))
-
     dict_colors = {}
     for i in range(24):
         dict_colors[i] = COLORS[i]
@@ -276,23 +293,3 @@ if menu_id == "Webcam":
                 media_stream_constraints={"video": True, "audio": False},
                 async_processing=True,
             )
-
-    # Final word
-    # with col1:
-    #     final_word = ""
-
-    #     if webrtc_ctx.state.playing:
-    #         labels_placeholder = st.empty()
-    #         while True:
-    #             if webrtc_ctx.video_processor:
-    #                 try:
-    #                     result = webrtc_ctx.video_processor.result_queue_word.get(timeout=1.0)
-    #                     final_word = ""
-    #                     for value in result:
-    #                         final_word = final_word + value
-    #                     labels_placeholder.title(final_word)
-    #                     labels_placeholder.markdown(f"<h1 style='text-align: center; color: red;'>{final_word}</h1>", unsafe_allow_html=True)
-    #                 except queue.Empty:
-    #                     result = final_word
-    #             else:
-    #                 break
